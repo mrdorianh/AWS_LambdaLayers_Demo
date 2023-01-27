@@ -71,4 +71,4 @@ custom:
         - Ref: AWS::AccountId # Account ID
         - layer # Layer type
         - layer-service-${sls:stage}-myLayer # Layer name
-        - 3 # Layer version
+        - 1 # Layer version

@@ -234,7 +234,8 @@
           "retain": true,
           "package": {
             "artifact": "H:\\_Dev_\\AWS_LambdaLayers_Demo\\layers\\.serverless\\hello.zip"
-          }
+          },
+          "artifactAlreadyUploaded": true
         }
       }
     },
@@ -244,7 +245,7 @@
     "isDashboardMonitoringPreconfigured": false
   },
   "package": {
-    "artifactDirectoryName": "serverless/layer-service/dev/1674835584798-2023-01-27T16:06:24.798Z",
+    "artifactDirectoryName": "serverless/layer-service/dev/1674850313254-2023-01-27T20:11:53.254Z",
     "artifact": ""
   }
 }

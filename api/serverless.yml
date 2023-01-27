@@ -1,0 +1,74 @@
+service: api-service
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  region: us-east-1
+  runtime: nodejs14.x
+  timeout: 3
+  memorySize: 128
+  stage: ${opt:stage, 'dev'}
+  endpointType: regional
+  apiGateway:
+    resourcePolicy:
+      - Effect: Allow
+        Principal: '*'
+        Action: execute-api:Invoke
+        Resource:
+          - execute-api:/*/*/*
+      - Effect: Deny
+        Principal: '*'
+        Action: execute-api:Invoke
+        Resource:
+          - execute-api:/*/*/*
+  
+
+# you can add packaging information here
+package:
+  individually: true
+  exclude:
+    - ./** # exclude all files and folders (including node modules since we are using layers)
+
+
+functions:
+  hasLayer:
+    handler: index.handler
+    description: Retrieve wisdom from cows
+    timeout: 7
+    layers:
+    - ${self:custom.commonLayerARN}
+    package:
+      include:
+        - index.js # include handler file
+    events:
+      - http:
+          path: layered
+          method: get
+          cors:
+            origins: '*'
+  noLayer:
+    handler: index.handler
+    description: Retrieve wisdom from cows
+    timeout: 7
+    package:
+      include:
+        - ./** # include all files and folders (default behavior without individual packaging)
+    events:
+      - http:
+          path: unlayered
+          method: get
+          cors:
+            origins: '*'
+custom:
+  commonLayerARN:
+    Fn::Join:
+      - ":"
+      - - arn 
+        - aws
+        - lambda # Service
+        - Ref: AWS::Region # Region
+        - Ref: AWS::AccountId # Account ID
+        - layer # Layer type
+        - layer-service-${sls:stage}-myLayer # Layer name
+        - 3 # Layer version
